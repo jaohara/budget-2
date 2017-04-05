@@ -158,9 +158,9 @@ def print_title():
     print("Written by John O'Hara")
     print("Last Updated {}".format(last_updated))
     # all test stuff
-    print("Running from {}".format(os.path.dirname(os.path.abspath(__file__))))
-    print("Looking for {}".format(budget_dir))
-    print(os.path.isdir(budget_dir))
+    #print("Running from {}".format(os.path.dirname(os.path.abspath(__file__))))
+    #print("Looking for {}".format(budget_dir))
+    #print(os.path.isdir(budget_dir))
     print(div, end="\n\n")
 
 def quit_program():
