@@ -40,18 +40,34 @@
             but desired financial growth), entertainment (non-essential and first to go), that 
             way when the number is crunched it will tell you how much you need to make 
             the bare necessities as well as how much you will need to make your goal.
+
+
+
+
+            !!!!!!!!!!!!!!!!!!!!!!
+            There's an issue saving files. Sometimes the directory disappears, most of the time
+            the file will disappear. I need to examine this more.
+
+
+
+            I found this issue - it uses the present working directory instead of an absolute 
+            directory path. So this shit will work differently based on whichever directory
+            you choose. I think I need to make a way to detect where the script itself is, and
+            then base it all off of that. 
+            !!!!!!!!!!!!!!!!!!!!!!
 """
 import os
 import re
 
 div = "-" * 29
-budget_dir = "budget_data"
+budget_dir = "{}/budget_data".format(os.path.dirname(os.path.abspath(__file__)))
 money_pattern = r'^\d+\.?\d+$'
 last_updated = "March 28th, 2017"
 
 
 def scan_budget_files():
     # check if .budget_data exists
+
     if not os.path.isdir(budget_dir):
         print("Budget data directory doesn't exist, creating...")
         os.makedirs(budget_dir)
@@ -59,7 +75,7 @@ def scan_budget_files():
     budget_files = list()
 
     for item in os.listdir(budget_dir):
-        if os.path.isfile("./{}/{}".format(budget_dir, item)):
+        if os.path.isfile("{}/{}".format(budget_dir, item)):
             budget_files.append(item)
 
     return budget_files
@@ -141,6 +157,10 @@ def print_title():
     print("Budget Script v2.0")
     print("Written by John O'Hara")
     print("Last Updated {}".format(last_updated))
+    # all test stuff
+    print("Running from {}".format(os.path.dirname(os.path.abspath(__file__))))
+    print("Looking for {}".format(budget_dir))
+    print(os.path.isdir(budget_dir))
     print(div, end="\n\n")
 
 def quit_program():
@@ -170,10 +190,10 @@ def main(args=None):
 
             while True:
                 name = input()
-                if os.path.isfile("./{}/{}".format(budget_dir, name)):
+                if os.path.isfile("{}/{}".format(budget_dir, name)):
                     print("{} already exists. Please provide a different name: ".format(name), end="")
                 else:
-                    file = open("./{}/{}".format(budget_dir, name), "w")
+                    file = open("{}/{}".format(budget_dir, name), "w")
                     break
 
             print("Workdays in month (1-31)? ", end="")
@@ -220,7 +240,7 @@ def main(args=None):
                 file_name = input()
 
                 try:
-                    file = open("./{}/{}".format(budget_dir, file_name))
+                    file = open("{}/{}".format(budget_dir, file_name))
                 except:
                     print("File doesn't exist. Please enter a valid file name.")
                     # make way to ask to create a file - maybe make file creation a method and
@@ -298,7 +318,7 @@ def main(args=None):
 
                             file.close()
 
-                            file = open("./{}/{}".format(budget_dir, file_name), "w")
+                            file = open("{}/{}".format(budget_dir, file_name), "w")
 
                             for data_line in file_data:
                                 file.write(data_line)
@@ -322,12 +342,12 @@ def main(args=None):
                 target = input()
 
                 try:
-                    del_file = open("./{}/{}".format(budget_dir, target))
+                    del_file = open("{}/{}".format(budget_dir, target))
                 except:
                     print("File doesn't exist, no need to delete!")
                 else:
                     del_file.close()
-                    os.remove("./{}/{}".format(budget_dir, target))
+                    os.remove("{}/{}".format(budget_dir, target))
                     print("'{}' deleted successfully!".format(target))
                     files = scan_budget_files()
         elif file_option.lower() == "l":
